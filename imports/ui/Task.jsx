@@ -1,20 +1,20 @@
 import React, { Component, PropTypes } from 'react';
-import { Meteor } from 'meteor/meteor';
+// import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
 
 // Task component - represents a single todo item
 export default class Task extends Component {
   toggleChecked() {
     // Set the checked property to the opposite of its current value
-    Meteor.call('tasks.setChecked', this.props.task._id, !this.props.task.checked);
+    this.props.toggleChecked(this.props.task._id, !this.props.task.checked);
   }
 
   deleteThisTask() {
-    Meteor.call('tasks.remove', this.props.task._id);
+    this.props.deleteThisTask(this.props.task._id);
   }
 
   togglePrivate() {
-    Meteor.call('tasks.setPrivate', this.props.task._id, ! this.props.task.private);
+    this.props.togglePrivate(this.props.task._id, ! this.props.task.private);
   }
 
   render() {
@@ -45,7 +45,8 @@ export default class Task extends Component {
         ) : ''}
 
         <span className="text">
-          <strong>{this.props.task.username}</strong>: {this.props.task.text}
+          <strong>{this.props.task.username}</strong>
+          <span className="taskText">: {this.props.task.text}</span>
         </span>
       </li>
     );
@@ -55,6 +56,9 @@ export default class Task extends Component {
 Task.propTypes = {
   // This component gets the task to display through a React prop.
   // We can use propTypes to indicate it is required
+  toggleChecked: PropTypes.func.isRequired,
+  togglePrivate: PropTypes.func.isRequired,
+  deleteThisTask: PropTypes.func.isRequired,
   task: PropTypes.object.isRequired,
   showPrivateButton: React.PropTypes.bool.isRequired,
 };
